@@ -4,9 +4,9 @@ const sportController = require('../../controllers/sportController')
 
 router
     .get('/', sportController.getAllSports)
-    .get('/:workoutId', sportController.getSportById)
+    .get('/:sportId', sportController.getSportById)
     .post('/', sportController.createSport)
-    .put('/:workoutId', sportController.updateSport)
-    .delete('/:workoutId', sportController.deleteSport);
+    .put('/:sportId', sportController.updateSport)
+    .delete('/:sportId', sportController.deleteSport);
 
 module.exports = router;
