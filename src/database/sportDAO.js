@@ -4,7 +4,9 @@ const getAllSports = async () => {
     return await Sport.find({});
 };
 
-const getSportById = () => {};
+const getSportById = async(id) => {
+    return await Sport.findById(id).exec();
+};
 
 const createSport = async (sport) => {
     const newSport = new Sport({

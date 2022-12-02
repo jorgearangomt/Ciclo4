@@ -5,7 +5,10 @@ const getAllSports = async () => {
     return allSports;
 };
 
-const getSportById = () => {};
+const getSportById = async (id) => {
+    const sport = await sportDAO.getSportById(id);
+    return sport;
+};
 
 const createSport = async (sport) => {
     const savedSport = await sportDAO.createSport(sport);

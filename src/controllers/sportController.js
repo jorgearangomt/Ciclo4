@@ -5,7 +5,12 @@ const getAllSports = async (req, res) => {
   res.status(200).send(allSports);
 };
 
-const getSportById = (req, res) => {};
+const getSportById = async (req, res) => {
+  const {sportId} = req.params;
+  const sport = await sportService.getSportById(sportId);
+  res.status(200).send(sport);
+};
+
 const createSport = async (req, res) => {
   const { body } = req;
   const createdSport = await sportService.createSport(body);
