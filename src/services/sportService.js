@@ -1,17 +1,18 @@
-const Sport = require('../database/model/sport');
 const sportDAO = require('../database/sportDAO');
 
+const getAllSports = async () => {
+    const allSports = await sportDAO.getAllSports();
+    return allSports;
+};
 
-const getAllSports = () => {};
 const getSportById = () => {};
+
 const createSport = async (sport) => {
-    const newSport = new Sport({
-        name: sport.name,
-    })
-    const savedSport = await sportDAO.createSport(newSport);
+    const savedSport = await sportDAO.createSport(sport);
     console.log(savedSport);
     return savedSport;
 };
+
 const updateSport = () => {};
 const deleteSport = () => {};
 

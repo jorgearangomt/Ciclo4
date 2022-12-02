@@ -1,6 +1,9 @@
 const sportService = require("../services/sportService");
 
-const getAllSports = (req, res) => {};
+const getAllSports = async (req, res) => {
+  const allSports = await sportService.getAllSports();
+  res.status(200).send(allSports);
+};
 
 const getSportById = (req, res) => {};
 const createSport = async (req, res) => {
