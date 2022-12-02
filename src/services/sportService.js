@@ -16,7 +16,10 @@ const createSport = async (sport) => {
     return savedSport;
 };
 
-const updateSport = () => {};
+const updateSport = async (id,sport) => {
+    const updatedSport = await sportDAO.updateSport(id,sport);
+    return updatedSport;
+};
 const deleteSport = () => {};
 
 module.exports = {

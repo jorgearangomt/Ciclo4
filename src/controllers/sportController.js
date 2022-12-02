@@ -16,7 +16,14 @@ const createSport = async (req, res) => {
   const createdSport = await sportService.createSport(body);
   res.status(201).send(createdSport);
 };
-const updateSport = (req, res) => {};
+
+const updateSport = async (req, res) => {
+  const {body} = req;
+  const {sportId} = req.params;
+  const updatedSport = await sportService.updateSport(sportId,body);
+  res.status(200).send(updatedSport);
+};
+
 const deleteSport = (req, res) => {};
 
 module.exports = {

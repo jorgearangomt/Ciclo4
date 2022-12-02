@@ -19,7 +19,17 @@ const createSport = async (sport) => {
         console.log(error);
     }
 };
-const updateSport = () => {};
+const updateSport = async (id,sport) => {
+    try {
+        const isUpdated = await Sport.updateOne({_id:id},sport);
+        if(isUpdated){
+            return await Sport.findById(id).exec();
+        }
+        return {};
+    } catch (error) {
+        console.log(error);
+    }
+};
 const deleteSport = () => {};
 
 
