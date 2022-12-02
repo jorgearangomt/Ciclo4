@@ -25,6 +25,8 @@ const PORT = process.env.DEV_PORT || 9000;
 app.use(express.json());
 app.use('/api/v1/sports',v1SportRouter);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`!!OK, Server listening on port ${PORT}`);
 });
+
+module.exports = server, mongoose;

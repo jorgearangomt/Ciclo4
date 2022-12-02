@@ -1,49 +1,58 @@
-const Sport = require('../database/model/sport');
+const Sport = require("../database/model/sport");
 
 const getAllSports = async () => {
-    return await Sport.find({});
+  try {
+    const sports = await Sport.find({});
+    return sports;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
-const getSportById = async(id) => {
-    return await Sport.findById(id).exec();
+const getSportById = async (id) => {
+  try {
+    const sport = await Sport.findById(id);
+    return sport;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const createSport = async (sport) => {
+  try {
     const newSport = new Sport({
-        name: sport.name,
-    })
-    try {
-        const sportSaved = await newSport.save();
-        return sportSaved;
-    } catch (error) {
-        console.log(error);
-    }
+      name: sport.name,
+    });
+    const savedSport = await newSport.save();
+    return savedSport;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
-const updateSport = async (id,sport) => {
-    try {
-        const isUpdated = await Sport.updateOne({_id:id},sport);
-        if(isUpdated){
-            return await Sport.findById(id).exec();
-        }
-        return {};
-    } catch (error) {
-        console.log(error);
-    }
+const updateSport = async (id, sport) => {
+  try {
+    const updatedSport = await Sport.findByIdAndUpdate(id, sport, {
+      new: true,
+    });
+    return updatedSport;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const deleteSport = async (id) => {
-    try {
-        await Sport.deleteOne({_id:id})
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    await Sport.findByIdAndDelete(id);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 module.exports = {
-    getAllSports,
-    getSportById,
-    createSport,
-    updateSport,
-    deleteSport
-}
+  getAllSports,
+  getSportById,
+  createSport,
+  updateSport,
+  deleteSport,
+};
