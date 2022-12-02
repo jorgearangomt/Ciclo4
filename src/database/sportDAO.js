@@ -19,6 +19,7 @@ const createSport = async (sport) => {
         console.log(error);
     }
 };
+
 const updateSport = async (id,sport) => {
     try {
         const isUpdated = await Sport.updateOne({_id:id},sport);
@@ -30,8 +31,14 @@ const updateSport = async (id,sport) => {
         console.log(error);
     }
 };
-const deleteSport = () => {};
 
+const deleteSport = async (id) => {
+    try {
+        await Sport.deleteOne({_id:id})
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 module.exports = {
     getAllSports,

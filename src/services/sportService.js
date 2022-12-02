@@ -20,7 +20,9 @@ const updateSport = async (id,sport) => {
     const updatedSport = await sportDAO.updateSport(id,sport);
     return updatedSport;
 };
-const deleteSport = () => {};
+const deleteSport = async (id) => {
+    await sportDAO.deleteSport(id);
+};
 
 module.exports = {
     getAllSports,

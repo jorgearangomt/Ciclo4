@@ -24,7 +24,11 @@ const updateSport = async (req, res) => {
   res.status(200).send(updatedSport);
 };
 
-const deleteSport = (req, res) => {};
+const deleteSport = async (req, res) => {
+  const {sportId} = req.params;
+  await sportService.deleteSport(sportId);
+  res.status(204).send();
+};
 
 module.exports = {
   getAllSports,
