@@ -1,5 +1,5 @@
 const Sport = require("../database/model/sport");
-
+const mongoose = require("mongoose");
 const getAllSports = async () => {
   try {
     const sports = await Sport.find({});
@@ -21,8 +21,10 @@ const getSportById = async (id) => {
 const createSport = async (sport) => {
   try {
     const newSport = new Sport({
+      _id: new mongoose.Types.ObjectId(),
       name: sport.name,
     });
+    console.log(newSport);
     const savedSport = await newSport.save();
     return savedSport;
   } catch (error) {
@@ -37,6 +39,7 @@ const updateSport = async (id, sport) => {
     });
     return updatedSport;
   } catch (error) {
+    console.log(error);
     throw new Error(error);
   }
 };
