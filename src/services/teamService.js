@@ -38,9 +38,9 @@ const updateTeam = async (id, team) => {
 
 const deleteTeam = async (id) => {
   try {
-    await teamDAO.deleteTeam(id);
+    return await teamDAO.deleteTeam(id);
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 

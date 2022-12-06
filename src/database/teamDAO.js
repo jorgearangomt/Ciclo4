@@ -1,36 +1,29 @@
 const Team = require("../database/model/team");
-const Sport = require("../database/model/sport");
 
 const getAllTeams = async () => {
   try {
     const teams = await Team.find({}).populate("sport");
     return teams;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 
 const getTeamById = async (id) => {
   try {
-    const team = await Team.findById(id).populate("sport");
+    const team = await Team.findById(id).populate("sport").lean();
     return team;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 
 const createTeam = async (team) => {
   try {
-    const foundSport = await Sport.findOne({name: team.sport.name});
-    console.log(foundSport);
-    const newTeam = new Team({
-      name: team.name,
-      sport: foundSport._id
-    });
-    const savedTeam = await newTeam.save();
+    const savedTeam = await team.save();
     return savedTeam;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
   
@@ -42,15 +35,15 @@ const updateTeam = async (id, team) => {
     });
     return updatedTeam;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 
 const deleteTeam = async (id) => {
   try {
-    await Team.findByIdAndDelete(id);
+    return await Team.findByIdAndDelete(id);
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 

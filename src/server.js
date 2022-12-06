@@ -32,3 +32,8 @@ const server = app.listen(PORT, () => {
 });
 
 module.exports = server, mongoose;
+
+//Este código inicia un servidor de express y conecta una base de datos mongoose. 
+// También se importan dos enrutadores de la carpeta v1 para manejar las rutas de deportes y equipos. 
+// El servidor se inicia en el puerto especificado en el archivo .env o en el puerto 9000 por defecto.
+//  Una vez que el servidor está escuchando, se exporta junto con la conexión de mongoose.
