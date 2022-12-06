@@ -19,6 +19,7 @@ database.once('connected', () => {
 
 const v1SportRouter = require('./v1/routes/sportRoutes');
 const v1TeamRouter = require('./v1/routes/teamRoutes');
+const v1UserRouter = require('./v1/routes/userRoutes');
 
 const app = express();
 const PORT = process.env.DEV_PORT || 9000;
@@ -26,6 +27,8 @@ const PORT = process.env.DEV_PORT || 9000;
 app.use(express.json());
 app.use('/api/v1/sports',v1SportRouter);
 app.use('/api/v1/teams',v1TeamRouter);
+app.use('/api/v1/users',v1UserRouter);
+
 
 const server = app.listen(PORT, () => {
     console.log(`!!OK, Server listening on port ${PORT}`);
