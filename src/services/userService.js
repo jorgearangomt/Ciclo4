@@ -5,7 +5,7 @@ const getAllUsers = async () => {
     const allUsers = await userDAO.getAllUsers();
     return allUsers;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 
@@ -14,7 +14,7 @@ const getUserById = async (id) => {
     const user = await userDAO.getUserById(id);
     return user;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 
@@ -23,7 +23,7 @@ const createUser = async (user) => {
     const savedUser = await userDAO.createUser(user);
     return savedUser;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 

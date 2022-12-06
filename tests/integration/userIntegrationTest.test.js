@@ -83,6 +83,15 @@ describe("User Endpoints", () => {
       expect(res.status).toBe(400);
       expect(res.text).toBe("Invalid email");
     });
+    it("should return a 400 error if user doesn't have password", async () => {
+      const newUser = {
+        name: "Bob Smith",
+        email: "bob.smith@example.com"
+      };
+      const res = await request(server).post("/api/v1/users").send(newUser);
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("Password is required");
+    });
   });
 
   describe("PUT /users/:userId", () => {

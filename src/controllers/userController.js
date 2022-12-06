@@ -34,6 +34,10 @@ const createUser = async (req, res) => {
 
     const { body } = req;
     const { email, password,name } = body;
+    if(!password){
+      res.status(400).send("Password is required");
+      return;
+    }
     const user = new User({
       _id: new mongoose.Types.ObjectId(),
       name,

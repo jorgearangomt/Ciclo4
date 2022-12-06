@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
   name: {
     required: true,
     type: String,
+    trim: true,
     validate: [
       {
         //Validar que el nombre tenga al menos 3 caracteres
