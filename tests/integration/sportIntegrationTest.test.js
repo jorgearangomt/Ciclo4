@@ -1,6 +1,5 @@
 const request = require('supertest');
 const app = require('../../src/server.js');
-const mongoose = require('../../src/server.js');
 let id;
 
 beforeEach(async () => {

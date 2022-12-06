@@ -1,15 +1,17 @@
+//Este código contiene el esquema de datos de deportes
 const mongoose = require("mongoose");
 
+//Esquema de datos de deportes
 const sportSchema = new mongoose.Schema({
   _id: {
     type: mongoose.Types.ObjectId,
     validate: [
         {
+            //Validar si la propiedad _id es un ObjectID válido de MongoDB
             validator: (id) => {
-                // Check if the _id property is a valid MongoDB ObjectID
                 return mongoose.Types.ObjectId.isValid(id);
             },
-            message: 'The provided _id is not a valid MongoDB ObjectID.',
+            message: 'El ID proporcionado no es un ObjectID válido de MongoDB.',
         },
     ],
 },
@@ -18,21 +20,22 @@ const sportSchema = new mongoose.Schema({
     type: String,
     validate: [
       {
+        //Validar que el nombre tenga al menos 3 caracteres
         validator: (name) => {
-          // Check if the name is at least 3 characters long
           return name.length >= 3;
         },
-        message: "Sport name must be at least 3 characters long.",
+        message: "El nombre del deporte debe tener al menos 3 caracteres.",
       },
       {
+        //Validar que el nombre solo contenga letras y espacios
         validator: (name) => {
-          // Check if the name only contains letters and spaces
           return /^[a-zA-Z\s]+$/.test(name);
         },
-        message: "Sport name can only contain letters and spaces.",
+        message: "El nombre del deporte solo puede contener letras y espacios.",
       },
     ],
   },
 });
 
+//Exportar modelo de datos
 module.exports = mongoose.model("Sport", sportSchema);

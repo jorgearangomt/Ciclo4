@@ -1,5 +1,7 @@
+//Este código contiene las funciones de servicio para manejar la lógica de negocio de los deportes
 const sportDAO = require("../database/sportDAO");
 
+//Obtener todos los deportes
 const getAllSports = async () => {
   try {
     const allSports = await sportDAO.getAllSports();
@@ -9,6 +11,7 @@ const getAllSports = async () => {
   }
 };
 
+//Obtener un deporte por su ID
 const getSportById = async (id) => {
   try {
     const sport = await sportDAO.getSportById(id);
@@ -18,6 +21,7 @@ const getSportById = async (id) => {
   }
 };
 
+//Crear un deporte
 const createSport = async (sport) => {
   try {
     const savedSport = await sportDAO.createSport(sport);
@@ -27,6 +31,7 @@ const createSport = async (sport) => {
   }
 };
 
+//Actualizar un deporte
 const updateSport = async (id, sport) => {
   try {
     const updatedSport = await sportDAO.updateSport(id, sport);
@@ -36,9 +41,10 @@ const updateSport = async (id, sport) => {
   }
 };
 
+//Eliminar un deporte
 const deleteSport = async (id) => {
   try {
-    await sportDAO.deleteSport(id);
+    return await sportDAO.deleteSport(id);
   } catch (error) {
     throw new Error(error);
   }
