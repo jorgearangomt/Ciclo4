@@ -26,11 +26,11 @@ const userSchema = new mongoose.Schema({
         message: "El nombre del deporte debe tener al menos 3 caracteres.",
       },
       {
-        //Validar que el nombre solo contenga letras y espacios
+        //Validar que el nombre solo contenga letras y espacios y numeros
         validator: (name) => {
-          return /^[a-zA-Z\s]+$/.test(name);
+          return /^[a-zA-Z\s0-9]+$/.test(name);
         },
-        message: "El nombre del deporte solo puede contener letras y espacios.",
+        message: "El nombre del deporte solo puede contener letras, espacios y numeros.",
       },
     ],
   },
