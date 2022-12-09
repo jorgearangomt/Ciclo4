@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
+    select: false,
     validate: [
       {
         //Validar que el nombre tenga al menos 8 caracteres

@@ -1,4 +1,6 @@
 const Match = require("../database/model/match");
+const User = require("../database/model/user");
+const Team = require("../database/model/team");
 const mongoose = require("mongoose");
 
 const matchService = require("../services/matchService");
@@ -32,20 +34,40 @@ const getMatchById = async (req, res) => {
 const createMatch = async (req, res) => {
   try {
     const { body } = req;
-    await Match.validate(body);
-    const match = new Match({ 
-      _id: new mongoose.Types.ObjectId(),
-        ...body,      
-    });
-    const createdMatch = await matchService.createMatch(match);
-    res.status(201).send(createdMatch);
-  } catch (error) {
-    if(error.name === "ValidationError"){
-      res.status(400).send("Invalid match data");
-      // res.status(400).send("Invalid email");
+    const { home_team: homeTeam, away_team: awayTeam, user, winner } = body;
+
+    if (homeTeam._id === awayTeam._id) {
+      return res.status(400).send("Home team and away team cannot be the same");
     }
-    else{
-      res.status(500).send(error?.message || eror);
+
+    const foundHomeTeam = await Team.findOne({ _id: homeTeam._id });
+    const foundAwayTeam = await Team.findOne({ _id: awayTeam._id });
+    if (!foundHomeTeam || !foundAwayTeam) {
+      return res.status(404).send("Home team or away team not found");
+    }
+
+    if (homeTeam._id !== winner._id && awayTeam._id !== winner._id) {
+      return res.status(400).send("Winner must be home team or away team");
+    }
+
+    const foundUser = await User.findOne({ _id: user._id });
+    if (!foundUser) {
+      return res.status(404).send("User not found");
+    }
+
+    const match = new Match({
+      _id: new mongoose.Types.ObjectId(),
+      ...body,
+    });
+
+    await Match.validate(match);
+    const createdMatch = await matchService.createMatch(match);
+    return res.status(201).send(createdMatch);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).send("Invalid match data");
+    } else {
+      return res.status(500).send(error?.message || error);
     }
   }
 };
@@ -55,25 +77,42 @@ const updateMatch = async (req, res) => {
   try {
     const { matchId } = req.params;
     const { body } = req;
-    await Match.validate(body);
-    const updatedMatch = await matchService.updateMatch(matchId, body);
+    const { home_team: homeTeam, away_team: awayTeam, user, winner } = body;
+
+    if (homeTeam._id === awayTeam._id) {
+      return res.status(400).send("Home team and away team cannot be the same");
+    }
+
+    const foundHomeTeam = await Team.findOne({ _id: homeTeam._id });
+    const foundAwayTeam = await Team.findOne({ _id: awayTeam._id });
+    if (!foundHomeTeam || !foundAwayTeam) {
+      return res.status(404).send("Home team or away team not found");
+    }
+
+    if (homeTeam._id !== winner._id && awayTeam._id !== winner._id) {
+      return res.status(400).send("Winner must be home team or away team");
+    }
+
+    const foundUser = await User.findOne({ _id: user._id });
+    if (!foundUser) {
+      return res.status(404).send("User not found");
+    }
+
+    const updatedMatch = await matchService.updateMatch(matchId,body);
     if(updatedMatch === null){
       res.status(404).send("Match not found");
       return;
     }
-    res.status(200).send(updatedMatch);
+    return res.status(200).send(updatedMatch);
   } catch (error) {
-    if (error.name === "CastError") {
-      res.status(404).send(error.message);
-    }
-    else if(error.name === "ValidationError"){
-      res.status(400).send("Invalid email");
-    }
-    else{
-      res.status(500).send(error?.message || error);
+    if (error.name === "ValidationError") {
+      return res.status(400).send("Invalid match data");
+    } else {
+      return res.status(500).send(error?.message || error);
     }
   }
 };
+
 
 //Eliminar un usuario
 const deleteMatch = async (req, res) => {
