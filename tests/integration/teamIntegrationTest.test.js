@@ -23,13 +23,13 @@ describe("Team Endpoints", () => {
     team1 = new Team({
       _id: new mongoose.Types.ObjectId(),
       name: "Barcelona",
-      sport: sport._id
+      sport: sport
     });
 
     team2 = new Team({
       _id: new mongoose.Types.ObjectId(),
       name: "Real Madrid",
-      sport: sport._id
+      sport: sport
     });
 
     await team1.save();
@@ -71,26 +71,31 @@ describe("Team Endpoints", () => {
     it("should create a team", async () => {
       const newTeam = {
         name: "Juventus",
-        sport: {
-          name: "Football"
-        }
+        sport: sport
       };
       const res = await request(server).post("/api/v1/teams").send(newTeam);
       expect(res.status).toBe(201);
-      expect(res.body.name).toBe(newTeam.name);
-      expect(res.body.sport).toBe(newTeam.sport.name);
+      expect(res.body).toHaveProperty('name',newTeam.name);
+      expect(res.body).toHaveProperty('sport._id',sport._id.toString());
     });
 
     it("should return a 404 error if sport not found", async () => {
       const newTeam = {
         name: "Juventus",
-        sport: {
-          name: "Basketball"
-        }
+        sport: {_id: new mongoose.Types.ObjectId()}
       };
       const res = await request(server).post("/api/v1/teams").send(newTeam);
       expect(res.status).toBe(404);
       expect(res.text).toBe("Sport not found");
+    });
+    it("should return a 400 error if data is invalid", async () => {
+      const newTeam = {
+        name: "J3",
+        sport: sport
+      };
+      const res = await request(server).post("/api/v1/teams").send(newTeam);
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("Invalid team data");
     });
   });
 
@@ -98,26 +103,41 @@ describe("Team Endpoints", () => {
     it("should update a team", async () => {
       const updatedTeam = {
         name: "Paris Saint Germain",
-        sport: {
-          name: "Football"
-        }
+        sport: sport
       };
       const res = await request(server).put(`/api/v1/teams/${team1._id}`).send(updatedTeam);
       expect(res.status).toBe(200);
       expect(res.body.name).toBe(updatedTeam.name);
-      expect(res.body.sport).toBe(updatedTeam.sport.name);
+      expect(res.body.sport._id).toBe(sport._id.toString());
+      expect(res.body.sport.name).toBe(updatedTeam.sport.name);
     });
 
+    it("should return a 404 error if team not found", async () => {
+      const updatedTeam = {
+        name: "Paris Saint Germain",
+        sport: sport
+      };
+      const res = await request(server).put(`/api/v1/teams/${new mongoose.Types.ObjectId()}`).send(updatedTeam);
+      expect(res.status).toBe(404);
+      expect(res.text).toBe("Team not found");
+    });
     it("should return a 404 error if sport not found", async () => {
       const updatedTeam = {
         name: "Paris Saint Germain",
-        sport: {
-          name: "Basketball"
-        }
+        sport: {_id: new mongoose.Types.ObjectId()}
       };
       const res = await request(server).put(`/api/v1/teams/${team1._id}`).send(updatedTeam);
       expect(res.status).toBe(404);
       expect(res.text).toBe("Sport not found");
+    });
+    it("should return a 400 error if data is invalid", async () => {
+      const newTeam = {
+        name: "J3",
+        sport: sport
+      };
+      const res = await request(server).put(`/api/v1/teams/${team1._id}`).send(newTeam);
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("Invalid team data");
     });
   });
 

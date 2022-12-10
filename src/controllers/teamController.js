@@ -32,27 +32,26 @@ const getTeamById = async (req, res) => {
 const createTeam = async (req, res) => {
   try {
     const { body } = req;
-    const foundSport = await Sport.findOne({ name: body.sport.name });
+    const {sport} = body;
+    const foundSport = await Sport.findOne({ _id: sport._id  });
     if (!foundSport) {
       res.status(404).send("Sport not found");
       return;
     }
     const newTeam = new Team({
       _id: new mongoose.Types.ObjectId(),
-      name: body.name,
-      sport: foundSport._id,
+      ...body,
     })
     await Team.validate(newTeam);
     const createdTeam = await teamService.createTeam(newTeam);
-    const response = { 
-      _id: createdTeam._id,
-      name: createdTeam.name,
-      sport: foundSport.name 
-    };
-    res.status(201).send(response);
+    res.status(201).send(createdTeam);
   } catch (error) {
-    res.status(500).send(error?.message || error);
-    console.log(error?.message || error);
+    if (error.name === "ValidationError") {
+      return res.status(400).send("Invalid team data");
+    }
+    else {
+      res.status(500).send(error?.message || error);
+    }
   }
 };
 
@@ -61,30 +60,26 @@ const updateTeam = async (req, res) => {
   try {
     const { teamId } = req.params;
     const { body } = req;
-    const foundSport = await Sport.findOne({ name: body.sport.name });
+    const { sport } = body;
+    const foundSport = await Sport.findOne({ _id: sport._id });
     if (!foundSport) {
       res.status(404).send("Sport not found");
       return;
     }
-    const parsedTeam = new Team({
-      name: body.name,
-      sport: foundSport._id,
-    })
-    await Team.validate(parsedTeam);
-    const updatedTeam = await teamService.updateTeam(teamId, parsedTeam);
+    await Team.validate(body);
+    const updatedTeam = await teamService.updateTeam(teamId, body);
     if(updatedTeam === null) {
       res.status(404).send("Team not found");
       return;
     }
-    const response = {
-      _id: updatedTeam._id,
-      name: updatedTeam.name,
-      sport: foundSport.name
-    }
-    res.status(200).send(response);
+    res.status(200).send(updatedTeam);
   } catch (error) {
-    res.status(500).send(error?.message || error);
-    console.log(error?.message || error);
+    if (error.name === "ValidationError") {
+      return res.status(400).send("Invalid team data");
+    }
+    else {
+      res.status(500).send(error?.message || error);
+    }
   }
 };
 

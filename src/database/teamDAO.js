@@ -21,7 +21,7 @@ const getTeamById = async (id) => {
 const createTeam = async (team) => {
   try {
     const savedTeam = await team.save();
-    return savedTeam;
+    return await savedTeam.populate("sport");
   } catch (error) {
     throw error;
   }
@@ -32,7 +32,7 @@ const updateTeam = async (id, team) => {
   try {
     const updatedTeam = await Team.findByIdAndUpdate(id, team, {
       new: true,
-    });
+    }).populate("sport");
     return updatedTeam;
   } catch (error) {
     throw error;
