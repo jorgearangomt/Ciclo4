@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express');
+const cors = require('cors');
 
 const mongoose = require('mongoose');
 const mongoString = process.env.DEV_DATABASE_URL;
@@ -24,6 +25,10 @@ const v1MatchRouter = require('./v1/routes/matchRoutes');
 
 const app = express();
 const PORT = process.env.DEV_PORT || 9000;
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+}));
 
 app.use(express.json());
 app.use('/api/v1/sports',v1SportRouter);
