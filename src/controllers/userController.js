@@ -51,6 +51,9 @@ const createUser = async (req, res) => {
     if(error.name === "ValidationError"){
       res.status(400).send("Invalid email");
     }
+    else if(error.name === "EmailExistError"){
+      res.status(400).send(error?.message || error);
+    }
     else{
       res.status(500).send(error?.message || error);
     }

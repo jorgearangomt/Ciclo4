@@ -92,6 +92,16 @@ describe("User Endpoints", () => {
       expect(res.status).toBe(400);
       expect(res.text).toBe("Password is required");
     });
+    it("should return a 400 error if user already exist by the email", async () => {
+      const newUser = {
+        name: "Bob Smith",
+        email: "john.doe@example.com",
+        password: "password"
+      };
+      const res = await request(server).post("/api/v1/users").send(newUser);
+      expect(res.status).toBe(400);
+      expect(res.text).toBe("User with that email already exists");
+    });
   });
 
   describe("PUT /users/:userId", () => {

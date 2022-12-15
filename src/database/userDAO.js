@@ -47,10 +47,21 @@ const deleteUser = async (id) => {
   }
 };
 
+
+const getUserByEmail = async (email) => {
+  try {
+    return await User.findOne({ email: email });
+  }
+  catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
+  getUserByEmail,
 };

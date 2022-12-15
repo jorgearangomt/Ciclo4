@@ -20,6 +20,11 @@ const getUserById = async (id) => {
 
 const createUser = async (user) => {
   try {
+    const isExist = await userDAO.getUserByEmail(user.email);
+    if (isExist) {
+      throw Object.assign(new Error("User with that email already exists"),
+        { name: "EmailExistError" });
+    }
     const savedUser = await userDAO.createUser(user);
     return savedUser;
   } catch (error) {
