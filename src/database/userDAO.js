@@ -21,6 +21,7 @@ const getUserById = async (id) => {
 const createUser = async (user) => {
   try {
     const savedUser = await user.save();
+    savedUser.password = undefined;
     return savedUser;
   } catch (error) {
     throw error;
@@ -57,6 +58,15 @@ const getUserByEmail = async (email) => {
   }
 };
 
+const getUserPassword = async (id) => {
+  try {
+    const user = await User.findById(id, { password: 1 });
+    return user.password;
+  } catch (error) {
+    throw error;
+  };
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
@@ -64,4 +74,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserByEmail,
+  getUserPassword
 };

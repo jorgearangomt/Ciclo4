@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const userDAO = require("../database/userDAO");
 
 const getAllUsers = async () => {
@@ -18,19 +20,32 @@ const getUserById = async (id) => {
   }
 };
 
+const getUserByEmail = async (email) => {
+  try {
+    const user = await userDAO.getUserByEmail(email);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const createUser = async (user) => {
   try {
+    const { password } = user;
     const isExist = await userDAO.getUserByEmail(user.email);
     if (isExist) {
       throw Object.assign(new Error("User with that email already exists"),
         { name: "EmailExistError" });
     }
+    const encryptedPassword = await encryptPassword(password);
+    user.password = encryptedPassword;
     const savedUser = await userDAO.createUser(user);
     return savedUser;
   } catch (error) {
     throw error;
   }
 };
+
 
 const updateUser = async (id, user) => {
   try {
@@ -49,10 +64,33 @@ const deleteUser = async (id) => {
   }
 };
 
+const encryptPassword = async (password) => {
+  try {
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    return encryptedPassword;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const comparePassword = async (registeredUser, password) => {
+  try {
+    const { _id } = registeredUser;
+    const registeredPassword = await userDAO.getUserPassword(_id);
+    const isMatch = bcrypt.compare(password, registeredPassword);
+    return isMatch;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
+  getUserByEmail,
+  comparePassword,
 };
