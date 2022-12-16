@@ -52,10 +52,10 @@ const createUser = async (req, res) => {
       res.status(400).send("Invalid email");
     }
     else if(error.name === "EmailExistError"){
-      res.status(400).send(error?.message || error);
+      res.status(400).send({message : error?.message} || error)    
     }
     else{
-      res.status(500).send(error?.message || error);
+      res.status(500).send({message : error?.message} || error);
     }
   }
 };
