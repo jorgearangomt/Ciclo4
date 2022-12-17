@@ -42,15 +42,16 @@ const login = async (req, res) => {
     const { email, password } = body;
     const registeredUser = await userService.getUserByEmail(email);
     if (!registeredUser) {
-      return res.status(404).send("email not found");
+      return res.status(404).send({ message: "email not found"});
     }
     const isPasswordValid = await userService.comparePassword(registeredUser, password);
     if (!isPasswordValid) {
-      return res.status(401).send("Invalid password");
+      return res.status(401).send({ message: "invalid password"});
     }
     const token = authService.generateToken(registeredUser);
-    return res.status(200).send({token: token});
-
+    const cookie = authService.getJWTInCookie(token);
+    res.setHeader('Set-Cookie', cookie);
+    return res.status(200).send({ user: registeredUser,message: "login success"});
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: error?.message } || error);
@@ -59,12 +60,18 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   const revokedToken = authService.revokeToken();
-  res.setHeader("Authorization", revokedToken);
+  const cookie = authService.getJWTInCookie(revokedToken);
+  res.setHeader('Set-Cookie', cookie);
   return res.status(200).send({message: "logout success"});
+};
+
+const isLogged = async (req, res) => {
+  return res.status(200).send({message: "logged"});
 };
 
 module.exports = {
   signup,
   login,
-  logout
+  logout,
+  isLogged,
 };

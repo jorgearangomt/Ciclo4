@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
-
+const cookie = require("cookie");
 const verifyToken = async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  // const authHeader = req.headers["authorization"];
+  // const token = authHeader && authHeader.split(" ")[1];
+  const token = cookie.parse(req.headers.cookie || '').session_token;
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }

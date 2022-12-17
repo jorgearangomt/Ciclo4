@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const cookie = require("cookie");
 
 const generateToken = (user) => {
   const payload = {
@@ -33,7 +34,10 @@ const revokeToken = () => {
   }
 };
 
+const getJWTInCookie = (jwt) => cookie.serialize('session_token', jwt, { httpOnly: true, secure: true });
+
 module.exports = {
   generateToken,
   revokeToken,
+  getJWTInCookie,
 };
