@@ -35,9 +35,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use('/api/v1/sports',verifyToken,v1SportRouter);
+app.use('/api/v1/sports',v1SportRouter);
 app.use('/api/v1/teams',v1TeamRouter);
-app.use('/api/v1/users',v1UserRouter);
+app.use('/api/v1/users',verifyToken,v1UserRouter);
 app.use('/api/v1/matches',v1MatchRouter);
 app.use('/api/v1/',v1AuthRouter);
 

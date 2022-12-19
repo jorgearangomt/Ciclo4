@@ -36,8 +36,11 @@ const revokeToken = () => {
 
 const getJWTInCookie = (jwt) => cookie.serialize('session_token', jwt, { httpOnly: true, secure: true });
 
+const decodeToken = (token) => jwt.verify(token, process.env.JWT_SECRET)
+
 module.exports = {
   generateToken,
   revokeToken,
   getJWTInCookie,
+  decodeToken,
 };
