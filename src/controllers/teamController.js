@@ -19,12 +19,12 @@ const getTeamById = async (req, res) => {
     const { teamId } = req.params;
     const team = await teamService.getTeamById(teamId);
     if (!team) {
-      res.status(404).send("Team not found");
+      res.status(404).send({ message: "Team not found" });
       return;
     }
     res.status(200).send(team);
   } catch (error) {
-    res.status(500).send(error?.message || error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 
@@ -32,10 +32,10 @@ const getTeamById = async (req, res) => {
 const createTeam = async (req, res) => {
   try {
     const { body } = req;
-    const {sport} = body;
-    const foundSport = await Sport.findOne({ _id: sport._id  });
+    const { sport } = body;
+    const foundSport = await Sport.findOne({ _id: sport._id });
     if (!foundSport) {
-      res.status(404).send("Sport not found");
+      res.status(404).send({ message: "Sport not found"});
       return;
     }
     const newTeam = new Team({
@@ -47,10 +47,10 @@ const createTeam = async (req, res) => {
     res.status(201).send(createdTeam);
   } catch (error) {
     if (error.name === "ValidationError") {
-      return res.status(400).send("Invalid team data");
+      return res.status(400).send({ message: "Invalid team data"});
     }
     else {
-      res.status(500).send(error?.message || error);
+      res.status(500).send({ message: error?.message } || error);
     }
   }
 };
@@ -63,22 +63,22 @@ const updateTeam = async (req, res) => {
     const { sport } = body;
     const foundSport = await Sport.findOne({ _id: sport._id });
     if (!foundSport) {
-      res.status(404).send("Sport not found");
+      res.status(404).send({ message: "Sport not found"});
       return;
     }
     await Team.validate(body);
     const updatedTeam = await teamService.updateTeam(teamId, body);
-    if(updatedTeam === null) {
-      res.status(404).send("Team not found");
+    if (updatedTeam === null) {
+      res.status(404).send({ message: "Team not found"});
       return;
     }
     res.status(200).send(updatedTeam);
   } catch (error) {
     if (error.name === "ValidationError") {
-      return res.status(400).send("Invalid team data");
+      return res.status(400).send({ message: "Invalid team data"});
     }
     else {
-      res.status(500).send(error?.message || error);
+      res.status(500).send({ message: error?.message } || error);
     }
   }
 };
@@ -87,21 +87,21 @@ const updateTeam = async (req, res) => {
 const deleteTeam = async (req, res) => {
   try {
     const { teamId } = req.params;
-    
+
     const deletedTeam = await teamService.deleteTeam(teamId);
     console.log(deletedTeam);
     if (deletedTeam === null) {
-      res.status(404).send("Team not found");
+      res.status(404).send({ message: "Team not found"});
       return;
     }
     res.status(204).send();
   } catch (error) {
     console.log(error);
-    if(error.name === "CastError") {
-      res.status(400).send("Bad request");
+    if (error.name === "CastError") {
+      res.status(400).send({ message: "Bad request"});
     }
-    else{
-      res.status(500).send(error);
+    else {
+      res.status(500).send({ message: error?.message } || error);
     }
   }
 };

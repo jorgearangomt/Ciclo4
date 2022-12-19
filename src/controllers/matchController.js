@@ -11,7 +11,7 @@ const getAllMatches = async (req, res) => {
     const allMatches = await matchService.getAllMatches();
     res.status(200).send(allMatches);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 
@@ -26,7 +26,7 @@ const getMatchById = async (req, res) => {
     }
     res.status(200).send(match);
   } catch (error) {
-    res.status(500).send(error?.message || error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 
@@ -37,22 +37,22 @@ const createMatch = async (req, res) => {
     const { home_team: homeTeam, away_team: awayTeam, user, winner } = body;
 
     if (homeTeam._id === awayTeam._id) {
-      return res.status(400).send("Home team and away team cannot be the same");
+      return res.status(400).send({ message: "Home team and away team cannot be the same"});
     }
 
     const foundHomeTeam = await Team.findOne({ _id: homeTeam._id });
     const foundAwayTeam = await Team.findOne({ _id: awayTeam._id });
     if (!foundHomeTeam || !foundAwayTeam) {
-      return res.status(404).send("Home team or away team not found");
+      return res.status(404).send({ message: "Home team or away team not found"});
     }
 
     if (homeTeam._id !== winner._id && awayTeam._id !== winner._id) {
-      return res.status(400).send("Winner must be home team or away team");
+      return res.status(400).send({ message: "Winner must be home team or away team" });
     }
 
     const foundUser = await User.findOne({ _id: user._id });
     if (!foundUser) {
-      return res.status(404).send("User not found");
+      return res.status(404).send({ message: "User not found"});
     }
 
     const match = new Match({
@@ -65,9 +65,9 @@ const createMatch = async (req, res) => {
     return res.status(201).send(createdMatch);
   } catch (error) {
     if (error.name === "ValidationError") {
-      return res.status(400).send("Invalid match data");
+      return res.status(400).send({ message: "Invalid match data"});
     } else {
-      return res.status(500).send(error?.message || error);
+      return res.status(500).send({ message: error?.message } || error);
     }
   }
 };
@@ -80,35 +80,35 @@ const updateMatch = async (req, res) => {
     const { home_team: homeTeam, away_team: awayTeam, user, winner } = body;
 
     if (homeTeam._id === awayTeam._id) {
-      return res.status(400).send("Home team and away team cannot be the same");
+      return res.status(400).send({ message: "Home team and away team cannot be the same"});
     }
 
     const foundHomeTeam = await Team.findOne({ _id: homeTeam._id });
     const foundAwayTeam = await Team.findOne({ _id: awayTeam._id });
     if (!foundHomeTeam || !foundAwayTeam) {
-      return res.status(404).send("Home team or away team not found");
+      return res.status(404).send({ message: "Home team or away team not found"});
     }
 
     if (homeTeam._id !== winner._id && awayTeam._id !== winner._id) {
-      return res.status(400).send("Winner must be home team or away team");
+      return res.status(400).send({ message: "Winner must be home team or away team"});
     }
 
     const foundUser = await User.findOne({ _id: user._id });
     if (!foundUser) {
-      return res.status(404).send("User not found");
+      return res.status(404).send({ message: "User not found"});
     }
 
-    const updatedMatch = await matchService.updateMatch(matchId,body);
-    if(updatedMatch === null){
-      res.status(404).send("Match not found");
+    const updatedMatch = await matchService.updateMatch(matchId, body);
+    if (updatedMatch === null) {
+      res.status(404).send({ message: "Match not found"});
       return;
     }
     return res.status(200).send(updatedMatch);
   } catch (error) {
     if (error.name === "ValidationError") {
-      return res.status(400).send("Invalid match data");
+      return res.status(400).send({ message: "Invalid match data"});
     } else {
-      return res.status(500).send(error?.message || error);
+      return res.status(500).send({ message: error?.message } || error);
     }
   }
 };
@@ -118,18 +118,18 @@ const updateMatch = async (req, res) => {
 const deleteMatch = async (req, res) => {
   try {
     const { matchId } = req.params;
-    const deletedMatch =await matchService.deleteMatch(matchId);
-    if(deletedMatch === null){
-      res.status(404).send("Match not found");
+    const deletedMatch = await matchService.deleteMatch(matchId);
+    if (deletedMatch === null) {
+      res.status(404).send({ message : "Match not found"});
       return;
     }
-    res.status(200).send("Match deleted");
+    res.status(200).send({ message : "Match deleted"});
   } catch (error) {
     if (error.name === "CastError") {
-      res.status(404).send(error.message);
+      res.status(404).send({ message: error?.message } || error);
       return;
     }
-    res.status(500).send(error?.message || error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 

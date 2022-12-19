@@ -19,12 +19,12 @@ const getUserById = async (req, res) => {
     const { userId } = req.params;
     const user = await userService.getUserById(userId);
     if (!user) {
-      res.status(404).send("User not found");
+      res.status(404).send({ message: "User not found" });
       return;
     }
     res.status(200).send(user);
   } catch (error) {
-    res.status(500).send(error?.message || error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 
@@ -33,9 +33,9 @@ const createUser = async (req, res) => {
   try {
 
     const { body } = req;
-    const { email, password,name } = body;
-    if(!password){
-      res.status(400).send("Password is required");
+    const { email, password, name } = body;
+    if (!password) {
+      res.status(400).send({ message: "Password is required"});
       return;
     }
     const user = new User({
@@ -48,14 +48,14 @@ const createUser = async (req, res) => {
     const createdUser = await userService.createUser(user);
     res.status(201).send(createdUser);
   } catch (error) {
-    if(error.name === "ValidationError"){
-      res.status(400).send("Invalid email");
+    if (error.name === "ValidationError") {
+      res.status(400).send({ message: "Invalid email"});
     }
-    else if(error.name === "EmailExistError"){
-      res.status(400).send({message : error?.message} || error)    
+    else if (error.name === "EmailExistError") {
+      res.status(400).send({ message: error?.message } || error)
     }
-    else{
-      res.status(500).send({message : error?.message} || error);
+    else {
+      res.status(500).send({ message: error?.message } || error);
     }
   }
 };
@@ -67,20 +67,20 @@ const updateUser = async (req, res) => {
     const { body } = req;
     await User.validate(body);
     const updatedUser = await userService.updateUser(userId, body);
-    if(updatedUser === null){
-      res.status(404).send("User not found");
+    if (updatedUser === null) {
+      res.status(404).send({ message: "User not found"});
       return;
     }
     res.status(200).send(updatedUser);
   } catch (error) {
     if (error.name === "CastError") {
-      res.status(404).send(error.message);
+      res.status(404).send({ message: error?.message } || error);
     }
-    else if(error.name === "ValidationError"){
-      res.status(400).send("Invalid email");
+    else if (error.name === "ValidationError") {
+      res.status(400).send({ message: "Invalid email"});
     }
-    else{
-      res.status(500).send(error?.message || error);
+    else {
+      res.status(500).send({ message: error?.message } || error);
     }
   }
 };
@@ -89,18 +89,18 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    const deletedUser =await userService.deleteUser(userId);
-    if(deletedUser === null){
+    const deletedUser = await userService.deleteUser(userId);
+    if (deletedUser === null) {
       res.status(404).send("User not found");
       return;
     }
     res.status(200).send("User deleted");
   } catch (error) {
     if (error.name === "CastError") {
-      res.status(404).send(error.message);
+      res.status(404).send({ message: error?.message } || error);
       return;
     }
-    res.status(500).send(error?.message || error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 

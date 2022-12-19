@@ -9,7 +9,7 @@ const getAllSports = async (req, res) => {
     const allSports = await sportService.getAllSports();
     res.status(200).send(allSports);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 
@@ -19,12 +19,12 @@ const getSportById = async (req, res) => {
     const { sportId } = req.params;
     const sport = await sportService.getSportById(sportId);
     if (!sport) {
-      res.status(404).send("Sport not found");
+      res.status(404).send({ message: "Sport not found"});
       return;
     }
     res.status(200).send(sport);
   } catch (error) {
-    res.status(500).send(error?.message || error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 
@@ -36,8 +36,8 @@ const createSport = async (req, res) => {
     const createdSport = await sportService.createSport(body);
     res.status(201).send(createdSport);
   } catch (error) {
-    res.status(500).send(error?.message || error);
-    console.log(error?.message || error);
+    res.status(500).send({ message: error?.message } || error);
+    // console.log(error?.message || error);
   }
 };
 
@@ -48,13 +48,13 @@ const updateSport = async (req, res) => {
     const { body } = req;
     await Sport.validate(body);
     const updatedSport = await sportService.updateSport(sportId, body);
-    if(updatedSport === null){
-      res.status(404).send("Sport not found");
+    if (updatedSport === null) {
+      res.status(404).send({ message: "Sport not found"});
       return;
     }
     res.status(200).send(updatedSport);
   } catch (error) {
-    res.status(500).send(error?.message || error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 
@@ -63,16 +63,16 @@ const deleteSport = async (req, res) => {
   try {
     const { sportId } = req.params;
     const deletedSport = await sportService.deleteSport(sportId);
-    if(deletedSport === null){
-      res.status(404).send("Sport not found");
+    if (deletedSport === null) {
+      res.status(404).send( {message: "Sport not found"});
       return;
     }
     res.status(204).send();
   } catch (error) {
-    if(error.name === "CastError"){
-      res.status(400).send("Invalid sport ID");
+    if (error.name === "CastError") {
+      res.status(400).send({ message: "Invalid sport ID" });
     }
-    res.status(500).send(error);
+    res.status(500).send({ message: error?.message } || error);
   }
 };
 
